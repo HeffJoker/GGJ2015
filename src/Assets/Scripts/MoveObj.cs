@@ -18,7 +18,8 @@ public class MoveObj : MonoBehaviour {
 	public bool moveOmni = false;					//Move omnidirectional only?
 	public bool moveDiag = false;					//Move diagonally only?
 	public int controlIndex = 0;
-	
+	public float pauseBetweenSteps = 0.2f;
+	public bool isMoving = false;
 
 	public Vector2 MoveDir
 	{
@@ -35,7 +36,7 @@ public class MoveObj : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 
 		if(controlIndex < 0 || controlIndex >= InputManager.Devices.Count)
 			return;
@@ -43,12 +44,13 @@ public class MoveObj : MonoBehaviour {
 		InputDevice input = InputManager.Devices[controlIndex];
 
 		MovementHandler (input.LeftStickX, input.LeftStickY); //LeftStickX, input.LeftStickY);
-		
-		
 	}
 	void MovementHandler(float inX, float inY)
 	{
-		
+		//Check if player is already moving or not moving at all
+		if(isMoving || (inX==0 && inY==0))
+			return;
+
 		dir = new Vector2 (inX, inY);
 		
 		if(moveHoriz && moveVert)
@@ -69,23 +71,34 @@ public class MoveObj : MonoBehaviour {
 			MoveOmni (dir);
 		if (moveDiag)
 			MoveDiag (dir);
+
+		//Re-enable movement after a step pause
+		if(isMoving)
+			StartCoroutine(ReenableMovement(pauseBetweenSteps));
+	}
+	IEnumerator ReenableMovement(float wait) {
+		yield return new WaitForSeconds(wait);		
+		isMoving = false;
 	}
 	void MoveHorizontal(Vector2 dir)
 	{
 		//Move object 
 		Vector2 move = new Vector2 (dir.x, 0);
 		thisObject.rigidbody2D.velocity = move * speed;
+		isMoving = true;
 	}
 	void MoveVertical(Vector2 dir)
 	{
 		//Move object 
 		Vector2 move = new Vector2 (0, dir.y);
 		thisObject.rigidbody2D.velocity = move * speed;
+		isMoving = true;
 	}
 	void MoveOmni(Vector2 dir)
 	{
 		//Move object 
 		thisObject.rigidbody2D.velocity = dir * speed;
+		isMoving = true;
 	}
 	void MoveDiag(Vector2 dir)
 	{
@@ -104,27 +117,20 @@ public class MoveObj : MonoBehaviour {
 		if(dir.y< 0)
 			dirY = -1;
 
-		//Check Joystick Centered
-		if(dir.y== 0 && dir.x == 0)
-		{
-			dirX = 0;
-			dirY = 0;
-		}
-		else
-		{
-			if(dirY > 0 && dirX==0) //Default diagonal for Up is Up/Right
-				dirX = 1;
-			else if (dirY < 0 && dirX==0) //Default diagonals for Down is Down/Left
-				dirX = -1;
-			else if(dirX > 0 && dirY==0) //Default diagonals for Right is Right/Down
-				dirY = -1;
-			else if(dirX < 0 && dirY==0) //Default diagonals for Left is Left/Up
-				dirY = 1;
-		}
+		//Check for Up/Down/Left/Right
+		if(dirY > 0 && dirX==0) 		//Default diagonal for Up is Up/Right
+			dirX = 1;
+		else if (dirY < 0 && dirX==0) 	//Default diagonals for Down is Down/Left
+			dirX = -1;
+		else if(dirX > 0 && dirY==0) 	//Default diagonals for Right is Right/Down
+			dirY = -1;
+		else if(dirX < 0 && dirY==0) 	//Default diagonals for Left is Left/Up
+			dirY = 1;
 		
 		//Move object 
 		Vector2 move = new Vector2 (dirX, dirY);
 		thisObject.rigidbody2D.velocity = move * speed;
+		isMoving = true;
 	}
 
 }
