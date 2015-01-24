@@ -7,6 +7,7 @@ public class PlayerObject : MonoBehaviour {
 	public float knockbackForce = 20;
 	public Transform MountPos;
 	public SlapObject slapObj;
+	public SlapObject fartShield;
 	public string playerName = string.Empty;
 
 	private MoveObj mover;
@@ -32,8 +33,10 @@ public class PlayerObject : MonoBehaviour {
 
 		InputDevice input = InputManager.Devices[mover.controlIndex];
 
-		if(input.AnyButton.WasPressed)
+		if(input.AnyButton.WasPressed){
 			slapObj.DoSlap();
+			fartShield.DoSlap();
+		}
 	}
 
 	void HandleMirror()
