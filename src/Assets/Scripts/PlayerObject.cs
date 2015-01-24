@@ -7,9 +7,10 @@ public class PlayerObject : MonoBehaviour {
 	public float knockbackForce = 20;
 	public Transform MountPos;
 	public SlapObject slapObj;
+	public string playerName = string.Empty;
 
 	private MoveObj mover;
-	private Transform goalTrans;
+	private GoalObject goalTrans;
 
 	// Use this for initialization
 	void Start () {
@@ -19,7 +20,8 @@ public class PlayerObject : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		HandleSlap();
+		if(goalTrans == null)
+			HandleSlap();
 		HandleMirror();
 	}
 
@@ -66,24 +68,16 @@ public class PlayerObject : MonoBehaviour {
 			if(goalObj.IsBeingCarried)
 				return;
 
-			if(MountPos == null)
-			{
-				collider.transform.position = transform.position;
-				collider.transform.parent = transform;
-			}
-			else
-			{
-				collider.transform.position = MountPos.position;
-				collider.transform.parent = MountPos;
-			}
-
-			goalObj.IsBeingCarried = true;
-			goalTrans = collider.transform;
+			if(goalObj.Attach(this))
+				goalTrans = goalObj;
 		}
 		else if(collider.CompareTag("SlapObj"))
 		{
 			if(goalTrans != null)
-				goalTrans.parent = transform.parent;
+			{
+				goalTrans.Detach();
+				goalTrans = null;
+			}
 
 			HandleKnockback(transform.position - collider.transform.position);
 		}
