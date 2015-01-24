@@ -13,6 +13,7 @@ public class MoveObj : MonoBehaviour {
 	private GameObject thisObject;					//Object reference to parent object
 	private float totalTime = 0;
 	private Vector3 lastPos = Vector3.zero;
+	private bool isMoving = false;
 
 	public float speed = 5;							//Movement speed value
 	public float curveSpeed = 5;					//Movement speed ONLY for wiggle.
@@ -24,7 +25,8 @@ public class MoveObj : MonoBehaviour {
 	public bool moveWiggle = false;					//Wiggle only?
 	public int controlIndex = 0;
 	public float pauseBetweenSteps = 0.2f;
-	public bool isMoving = false;
+
+	enum Mode {Horizontal, Vertical, HorizVert, HorizVertDiag, Diagonal, Omni, Wiggle};
 
 	public Vector2 MoveDir
 	{
