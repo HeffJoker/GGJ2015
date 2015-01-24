@@ -5,6 +5,7 @@
 /// </summary>
 using UnityEngine;
 using System.Collections;
+using InControl;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class MoveObj : MonoBehaviour {
@@ -16,18 +17,32 @@ public class MoveObj : MonoBehaviour {
 	public bool moveVert = false;					//Move vertical only?
 	public bool moveOmni = false;					//Move omnidirectional only?
 	public bool moveDiag = false;					//Move diagonally only?
+	public int controlIndex = 0;
 	
-	
-	
+
+	public Vector2 MoveDir
+	{
+		get { return dir; }
+	}
+
 	// Use this for initialization
 	void Start () {
 		thisObject = this.gameObject;				//Reference the current object
+		if(controlIndex < 0)
+			Debug.LogError(string.Format("Control index (val = {0}) cannot be less than 0!!", controlIndex));
+		else if(controlIndex >= InputManager.Devices.Count)
+			Debug.LogError(string.Format("Control index (val = {0}) exceeds number of controllers plugged in!", controlIndex));
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
-		
-		MovementHandler (Input.GetAxisRaw ("Horizontal"), Input.GetAxisRaw ("Vertical"));
+	void Update () {
+
+		if(controlIndex < 0 || controlIndex >= InputManager.Devices.Count)
+			return;
+
+		InputDevice input = InputManager.Devices[controlIndex];
+
+		MovementHandler (input.LeftStickX, input.LeftStickY); //LeftStickX, input.LeftStickY);
 		
 		
 	}

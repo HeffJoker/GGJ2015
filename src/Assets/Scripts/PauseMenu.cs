@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using InControl;
 
 public class PauseMenu : MonoBehaviour {
 	 bool isPaused = false;
@@ -12,10 +13,10 @@ public class PauseMenu : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-
 		SetVisability ();
 
-		if(Input.GetButtonDown("PauseGame"))
+		InputDevice input = InputManager.ActiveDevice;
+		if(input.MenuWasPressed) //Input.GetButtonDown("PauseGame"))
 		{
 			if(!isPaused)
 			{
@@ -28,7 +29,7 @@ public class PauseMenu : MonoBehaviour {
 				isPaused=false;
 			}
 		}
-		if(Input.GetButtonDown ("MainMenu")&& isPaused)
+		if(input.Action1 && isPaused)
 			ReturnToMenu();
 
 
