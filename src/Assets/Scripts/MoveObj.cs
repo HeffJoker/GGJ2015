@@ -11,12 +11,17 @@ using InControl;
 public class MoveObj : MonoBehaviour {
 	private Vector2 dir;							//Input values converted to vector2
 	private GameObject thisObject;					//Object reference to parent object
-	
+	private float totalTime = 0;
+	private Vector3 lastPos = Vector3.zero;
+
 	public float speed = 5;							//Movement speed value
+	public float curveSpeed = 5;					//Movement speed ONLY for wiggle.
+	public float amplitude = 2;
 	public bool moveHoriz = true;					//Move horizonal only?
 	public bool moveVert = false;					//Move vertical only?
 	public bool moveOmni = false;					//Move omnidirectional only?
 	public bool moveDiag = false;					//Move diagonally only?
+	public bool moveWiggle = false;					//Wiggle only?
 	public int controlIndex = 0;
 	public float pauseBetweenSteps = 0.2f;
 	public bool isMoving = false;
@@ -33,6 +38,8 @@ public class MoveObj : MonoBehaviour {
 			Debug.LogError(string.Format("Control index (val = {0}) cannot be less than 0!!", controlIndex));
 		else if(controlIndex >= InputManager.Devices.Count)
 			Debug.LogError(string.Format("Control index (val = {0}) exceeds number of controllers plugged in!", controlIndex));
+
+		lastPos = transform.position;
 	}
 	
 	// Update is called once per frame
@@ -71,6 +78,9 @@ public class MoveObj : MonoBehaviour {
 			MoveOmni (dir);
 		if (moveDiag)
 			MoveDiag (dir);
+
+		if(moveWiggle)
+			MoveWiggle(dir);
 
 		//Re-enable movement after a step pause
 		if(isMoving)
@@ -131,6 +141,17 @@ public class MoveObj : MonoBehaviour {
 		Vector2 move = new Vector2 (dirX, dirY);
 		thisObject.rigidbody2D.velocity = move * speed;
 		isMoving = true;
+	}
+
+	void MoveWiggle(Vector2 dir)
+	{
+		lastPos = transform.position;
+		totalTime += Time.deltaTime;// * curveSpeed;
+
+		Vector3 vSin = new Vector3(amplitude * Mathf.Sin(totalTime * curveSpeed), amplitude * -Mathf.Sin(totalTime * curveSpeed), 0);
+		Vector3 vLin = new Vector3(dir.x * speed, dir.y * speed, 0);
+		 
+		transform.position += (vSin + vLin) * Time.deltaTime;
 	}
 
 }
