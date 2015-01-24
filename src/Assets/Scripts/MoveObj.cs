@@ -51,10 +51,20 @@ public class MoveObj : MonoBehaviour {
 		
 		dir = new Vector2 (inX, inY);
 		
-		if (moveHoriz)
-			MoveHorizontal (dir);
-		if (moveVert)
-			MoveVertical (dir);
+		if(moveHoriz && moveVert)
+		{
+			if(Mathf.Abs(inX)>Mathf.Abs(inY))
+				MoveHorizontal(dir);
+			else
+				MoveVertical(dir);
+		}
+		else
+		{
+			if (moveHoriz)
+				MoveHorizontal (dir);
+			if (moveVert)
+				MoveVertical (dir);
+		}
 		if (moveOmni)
 			MoveOmni (dir);
 		if (moveDiag)
@@ -82,21 +92,34 @@ public class MoveObj : MonoBehaviour {
 		int dirX = 0;
 		int dirY = 0;
 		
-		//Check Joystick X position
+		//Check Joystick X position - Force to 1 for diagonal
 		if(dir.x> 0)
 			dirX = 1;
 		if(dir.x< 0)
 			dirX = -1;
-		//Check Joystick Y position
+
+		//Check Joystick Y position - Force to 1 for diagonal
 		if(dir.y> 0)
 			dirY = 1;
 		if(dir.y< 0)
 			dirY = -1;
+
 		//Check Joystick Centered
-		if(dir.y== 0 && dir.x == 0 || dir.x==0 || dir.y==0)
+		if(dir.y== 0 && dir.x == 0)
 		{
 			dirX = 0;
 			dirY = 0;
+		}
+		else
+		{
+			if(dirY > 0 && dirX==0) //Default diagonal for Up is Up/Right
+				dirX = 1;
+			else if (dirY < 0 && dirX==0) //Default diagonals for Down is Down/Left
+				dirX = -1;
+			else if(dirX > 0 && dirY==0) //Default diagonals for Right is Right/Down
+				dirY = -1;
+			else if(dirX < 0 && dirY==0) //Default diagonals for Left is Left/Up
+				dirY = 1;
 		}
 		
 		//Move object 
