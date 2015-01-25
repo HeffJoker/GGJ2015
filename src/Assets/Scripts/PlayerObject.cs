@@ -12,12 +12,12 @@ public class PlayerObject : MonoBehaviour {
 	public string playerName = string.Empty;
 
 	private MoveObj mover;
-	private GoalObject goalTrans;
+	private Collectible currItem;
 
 	public bool HasGoalObj
 	{
-		get { return goalTrans != null; }
-	}
+		get { return currItem != null; }
+}
 
 	// Use this for initialization
 	void Start () {
@@ -27,8 +27,7 @@ public class PlayerObject : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if(goalTrans == null)
-			HandleSlap();
+		HandleSlap();
 		HandleMirror();
 	}
 
@@ -39,8 +38,16 @@ public class PlayerObject : MonoBehaviour {
 
 		InputDevice input = InputManager.Devices[mover.controlIndex];
 
-		if(input.AnyButton.WasPressed){
-			slapObj.DoSlap();
+		if(input.AnyButton.WasPressed)
+		{
+			if(currItem == null)
+				slapObj.DoSlap();
+			else
+			{
+				currItem.Detach();
+				currItem = null;
+			}
+		}
 			fartShield.DoSlap();
 		}
 	}
@@ -90,22 +97,28 @@ public class PlayerObject : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D collider)
 	{
-		if(collider.CompareTag("GoalObj"))
+		if(collider.CompareTag("GoalObj") || collider.CompareTag("Collectible"))
 		{
-			GoalObject goalObj = collider.GetComponent<GoalObject>();
+			Collectible goalObj = collider.GetComponent<Collectible>();
 
-			if(goalObj.IsBeingCarried)
+			if(goalObj.IsBeingCarried || goalObj == currItem)
 				return;
 
+			if(currItem != null)
+			{
+				currItem.Detach();
+				currItem = null;
+			}
+
 			if(goalObj.Attach(this))
-				goalTrans = goalObj;
+				currItem = goalObj;
 		}
 		else if(collider.CompareTag("SlapObj"))
 		{
-			if(goalTrans != null)
+			if(currItem != null)
 			{
-				goalTrans.Detach();
-				goalTrans = null;
+				currItem.Detach();
+				currItem = null;
 			}
 
 			if(mover.enabled)
@@ -116,4 +129,20 @@ public class PlayerObject : MonoBehaviour {
 			}
 		}
 	}
+
+	/*
+	void OnTriggerStay2D(Collider2D collider)
+	{
+		if(collider.CompareTag("GoalObj") || collider.CompareTag("Collectible"))
+		{
+			Collectible goalObj = collider.GetComponent<Collectible>();
+			
+			if(goalObj.IsBeingCarried)
+				return;
+			
+			if(goalObj.Attach(this))
+				currItem = goalObj;
+		}
+	}
+	*/
 }

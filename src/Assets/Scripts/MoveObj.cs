@@ -17,16 +17,12 @@ public class MoveObj : MonoBehaviour {
 
 	public float speed = 5;							//Movement speed value
 	public float curveSpeed = 5;					//Movement speed ONLY for wiggle.
-	public float amplitude = 2;
-	public bool moveHoriz = true;					//Move horizonal only?
-	public bool moveVert = false;					//Move vertical only?
-	public bool moveOmni = false;					//Move omnidirectional only?
-	public bool moveDiag = false;					//Move diagonally only?
-	public bool moveWiggle = false;					//Wiggle only?
+	public float amplitude = 2;						//Amplitude ONLY for wiggle.
 	public int controlIndex = 0;
 	public float pauseBetweenSteps = 0.2f;
-
-	enum Mode {Horizontal, Vertical, HorizVert, HorizVertDiag, Diagonal, Omni, Wiggle};
+	public enum Mode {Horizontal, Vertical, HorizVert, Diagonal, Omni, Wiggle};
+	public Mode moveMode = Mode.Omni;
+	public bool reverseDirection = false;
 
 	public Vector2 MoveDir
 	{
@@ -61,28 +57,39 @@ public class MoveObj : MonoBehaviour {
 			return;
 
 		dir = new Vector2 (inX, inY);
-		
-		if(moveHoriz && moveVert)
-		{
-			if(Mathf.Abs(inX)>Mathf.Abs(inY))
-				MoveHorizontal(dir);
-			else
-				MoveVertical(dir);
-		}
-		else
-		{
-			if (moveHoriz)
-				MoveHorizontal (dir);
-			if (moveVert)
-				MoveVertical (dir);
-		}
-		if (moveOmni)
-			MoveOmni (dir);
-		if (moveDiag)
-			MoveDiag (dir);
 
-		if(moveWiggle)
-			MoveWiggle(dir);
+		if(reverseDirection)
+			dir *= -1;
+
+		switch(moveMode)
+		{
+			case Mode.Horizontal:
+				MoveHorizontal (dir);
+			break;
+
+			case Mode.Vertical:
+				MoveVertical (dir);
+			break;
+
+			case Mode.HorizVert:
+				if(Mathf.Abs(inX)>Mathf.Abs(inY))
+					MoveHorizontal(dir);
+				else
+					MoveVertical(dir);
+			break;
+
+			case Mode.Diagonal:
+				MoveDiag (dir);
+			break;
+
+			case Mode.Omni:
+				MoveOmni (dir);
+			break;
+
+			case Mode.Wiggle:
+				MoveWiggle(dir);
+			break;
+		}
 
 		//Re-enable movement after a step pause
 		if(isMoving)
