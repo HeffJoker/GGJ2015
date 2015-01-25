@@ -13,6 +13,7 @@ public class PlayerObject : MonoBehaviour {
 
 	private MoveObj mover;
 	private Collectible currItem;
+	private bool canGrabItem = true;
 
 	public bool HasGoalObj
 	{
@@ -48,8 +49,9 @@ public class PlayerObject : MonoBehaviour {
 				currItem = null;
 			}
 		}
-			fartShield.DoSlap();
-		}
+
+		//if(fartShield != null)
+		//	fartShield.DoSlap();
 	}
 
 	void HandleMirror()
@@ -99,9 +101,9 @@ public class PlayerObject : MonoBehaviour {
 	{
 		if(collider.CompareTag("GoalObj") || collider.CompareTag("Collectible"))
 		{
-			Collectible goalObj = collider.GetComponent<Collectible>();
+			Collectible collectible = collider.GetComponent<Collectible>();
 
-			if(goalObj.IsBeingCarried || goalObj == currItem)
+			if(collectible.IsBeingCarried || collectible == currItem)
 				return;
 
 			if(currItem != null)
@@ -110,8 +112,12 @@ public class PlayerObject : MonoBehaviour {
 				currItem = null;
 			}
 
-			if(goalObj.Attach(this))
-				currItem = goalObj;
+			if(canGrabItem && collectible.Attach(this))
+			{
+				currItem = collectible;
+				canGrabItem = false;
+				StartCoroutine(itemGrabCooldown());
+			}
 		}
 		else if(collider.CompareTag("SlapObj"))
 		{
@@ -128,6 +134,12 @@ public class PlayerObject : MonoBehaviour {
 				HandleKnockback(transform.position - collider.transform.position);
 			}
 		}
+	}
+
+	IEnumerator itemGrabCooldown()
+	{
+		yield return new WaitForSeconds(0.75f);
+		canGrabItem = true;
 	}
 
 	/*
