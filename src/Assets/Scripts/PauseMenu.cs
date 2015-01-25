@@ -38,6 +38,10 @@ public class PauseMenu : MonoBehaviour {
 	{
 		isPaused = false;
 		Time.timeScale = 1;
+		PlayerManager manager = FindObjectOfType<PlayerManager>();
+
+		if(manager != null)
+			Destroy(manager);
 		Application.LoadLevel ("MainMenu_scene");
 	}
 	void SetVisability()

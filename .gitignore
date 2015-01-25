@@ -19,3 +19,4 @@ sysinfo.txt
 /src/*.userprefs
 /src/*.csproj
 /release
+/src/Assets/Sprites/Thumbs.db.meta
