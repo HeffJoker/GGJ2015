@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using InControl;
 
 public class StallSpawner : MonoBehaviour {
 
@@ -7,28 +8,45 @@ public class StallSpawner : MonoBehaviour {
 	public float spawnTimeout = 1f;
 	public float spawnForce = 1000f;
 	public Vector2 spawnDir = Vector2.zero;
-	public int PlayerIndex = 0;
+	public int playerIndex = 0;
 	public WinMenu winMenu;
 	public PauseMenu pauseMenu;
+	public PlayerObject debugPlayerObj;
+	public bool ignorePlayerSelection = false;
 
 	private PlayerObject playerObj;
 
 	// Use this for initialization
 	void Start () {
-		PlayerManager manager = GameObject.FindObjectOfType<PlayerManager>();
 
-		if(manager == null)
-			Debug.LogError("Could not find PlayerManager object!!");
-		else
+		if(ignorePlayerSelection)
 		{
-			if(PlayerIndex < manager.Players.Count && PlayerIndex >= 0)
+			playerObj = debugPlayerObj;
+			if(playerIndex >= InputManager.Devices.Count)
+				playerObj.gameObject.SetActive(false);
+			else
 			{
-				playerObj = manager.Players[PlayerIndex];
-				playerObj.gameObject.SetActive(true);
+				playerObj.InDevice = InputManager.Devices[playerIndex];
 				StartSpawn();
 			}
+		}
+		else
+		{
+			PlayerManager manager = GameObject.FindObjectOfType<PlayerManager>();
+
+			if(manager == null)
+				Debug.LogError("Could not find PlayerManager object!!");
 			else
-				Debug.LogError(string.Format("Could not find a player for index = {0}", PlayerIndex));
+			{
+				if(playerIndex < manager.Players.Count && playerIndex >= 0)
+				{
+					playerObj = manager.Players[playerIndex];
+					playerObj.gameObject.SetActive(true);
+					StartSpawn();
+				}
+				else
+					Debug.LogError(string.Format("Could not find a player for index = {0}", playerIndex));
+			}
 		}
 	}
 
