@@ -16,6 +16,7 @@ public class PlayerObject : MonoBehaviour {
 	private bool canGrabItem = true;
 	private bool inStall = false;
 	private InputDevice inDevice;
+	private PoopContoller pController;
 
 	public bool InStall
 	{
@@ -53,6 +54,7 @@ public class PlayerObject : MonoBehaviour {
 	void Awake () {
 		mover = GetComponent<MoveObj>();
 		mover.InDevice = InDevice;
+		pController = GetComponent<PoopContoller>();
 	}
 	
 	// Update is called once per frame
@@ -60,6 +62,16 @@ public class PlayerObject : MonoBehaviour {
 
 		HandleSlap();
 		HandleMirror();
+
+		/*
+		if(pController != null && pController.poopBar.ReachedMax)
+		{
+			if(currItem != null)
+				currItem.Detach();
+
+			gameObject.SetActive(false);
+		}
+		*/
 	}
 
 	void HandleSlap()

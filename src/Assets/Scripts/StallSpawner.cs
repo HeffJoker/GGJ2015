@@ -19,6 +19,7 @@ public class StallSpawner : MonoBehaviour {
 
 
 	private bool playerInStall = false;
+	private bool playerSpawned = false;
 	private PlayerObject playerObj;
 	private PoopContoller pController;
 
@@ -79,6 +80,25 @@ public class StallSpawner : MonoBehaviour {
 			winMenu.Show(playerObj.name);
 			pauseMenu.enabled = false;
 		}
+
+		/*
+		PlayerObject[] gameObjs = FindObjectsOfType<PlayerObject>();
+		bool gameOver = false;
+		foreach(PlayerObject obj in gameObjs)
+		{
+			if(obj == null)
+				gameOver |= true;
+			else
+			{
+				gameOver |= !(obj.gameObject.activeSelf);
+			}
+		}
+
+		if(gameOver && playerSpawned)
+		{
+			winMenu.Show(playerObj.name);
+			pauseMenu.enabled = false;
+		}*/
 	}
 
 	public void StartSpawn()
@@ -101,6 +121,7 @@ public class StallSpawner : MonoBehaviour {
 
 	private void FinishSpawn()
 	{
+		playerSpawned = true;
 		pController.StartPooping();
 		playerObj.rigidbody2D.velocity = Vector2.zero;
 		playerObj.rigidbody2D.AddForce(spawnDir * spawnForce);
