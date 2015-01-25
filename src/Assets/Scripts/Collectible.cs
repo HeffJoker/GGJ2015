@@ -3,14 +3,24 @@ using System.Collections;
 
 public class Collectible : MonoBehaviour {
 	
-	public float carryTimeout = 2f;
-	
-	private PlayerObject attachedPlayer = null;
+	public float carryTimeout = 1f;	
+
+	protected bool isThrown = false;
+	protected PlayerObject attachedPlayer = null;
 	private bool isCarried = false;
-	
+
+	public bool isBeingThrown
+	{
+		get {return isThrown;}
+	}
+
 	public bool IsBeingCarried 
 	{
 		get { return isCarried; }
+	}
+
+	// Use this for initialization
+	void Start () {
 	}
 	
 	public bool Attach(PlayerObject player)
@@ -32,6 +42,10 @@ public class Collectible : MonoBehaviour {
 		
 		isCarried = true;
 		GetComponent<CircleCollider2D>().enabled = false;
+
+		if(rigidbody2D != null)
+			rigidbody2D.isKinematic = true;
+
 		return true;
 	}
 	
@@ -39,8 +53,6 @@ public class Collectible : MonoBehaviour {
 	{
 		//Transform oldObj = transform.parent.parent;
 		transform.parent = getTopmostTransform(transform); // transform.parent.parent.parent; 
-		transform.position = new Vector3(transform.position.x + 0.5f, transform.position.y + 0.5f);
-		//rigidbody2D.AddForce(transform.position.normalized * 50f);
 		isCarried = false;
 		GetComponent<CircleCollider2D>().enabled = true;
 		Invoke("DetachFromPlayer", carryTimeout);
