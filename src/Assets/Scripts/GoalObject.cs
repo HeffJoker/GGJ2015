@@ -15,7 +15,7 @@ public class GoalObject : Collectible {
 		if(rigidbody2D != null)
 		{
 			rigidbody2D.isKinematic = false;
-			rigidbody2D.AddForce(transform.position.normalized * 10f);
+			rigidbody2D.AddForce(transform.position.normalized * 20f);
 		}
 		else
 			Debug.LogError("Collectible '" + gameObject.name + "' doesn't have a rigidbody");
