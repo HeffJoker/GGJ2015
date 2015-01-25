@@ -1,48 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GoalObject : MonoBehaviour {
+public class GoalObject : Collectible {
 
-	public float carryTimeout = 2f;
-
-	private PlayerObject lastPlayer = null;
-	private bool isCarried = false;
-
-	public bool IsBeingCarried 
+	public override void DoAction()
 	{
-		get { return isCarried; }
-	}
+		if(IsBeingCarried)
+			Detach();
 
-	public bool Attach(PlayerObject player)
-	{
-		if(lastPlayer == player)
-			return false;
+		//Set dropped position
+		//transform.position = new Vector3(transform.position.x + 0.5f, transform.position.y + 0.5f);
 
-		lastPlayer = player;
-		if(player.MountPos == null)
+		//Move dropped item
+		if(rigidbody2D != null)
 		{
-			transform.position = transform.position;
-			transform.parent = transform;
+			rigidbody2D.isKinematic = false;
+			rigidbody2D.AddForce(transform.position.normalized * 10f);
 		}
 		else
-		{
-			transform.position = player.MountPos.position;
-			transform.parent = player.MountPos;
-		}
-
-		isCarried = true;
-		return true;
-	}
-
-	public void Detach()
-	{
-		transform.parent = transform.parent.parent.parent; 
-		isCarried = false;
-		Invoke("DetachFromPlayer", carryTimeout);
-	}
-
-	void DetachFromPlayer()
-	{
-		lastPlayer = null;
+			Debug.LogError("Collectible '" + gameObject.name + "' doesn't have a rigidbody");
 	}
 }

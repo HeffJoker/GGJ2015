@@ -18,7 +18,13 @@ public class PlayerObject : MonoBehaviour {
 
 	public bool HasGoalObj
 	{
-		get { return currItem != null; }
+		get 
+		{ 
+			if(currItem != null)
+				return currItem.tag == "GoalObj"; 
+			else 
+				return false;
+		}
 	}
 
 	public InputDevice InDevice
@@ -57,7 +63,7 @@ public class PlayerObject : MonoBehaviour {
 				slapObj.DoSlap();
 			else
 			{
-				currItem.Detach();
+				currItem.DoAction();
 				currItem = null;
 			}
 		}
@@ -110,11 +116,24 @@ public class PlayerObject : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D collider)
 	{
-		if(collider.CompareTag("GoalObj") || collider.CompareTag("Collectible"))
+		if(collider.CompareTag("GoalObj") || collider.CompareTag("Projectile") || collider.CompareTag("Consumable"))
 		{
-			Collectible collectible = collider.GetComponent<Collectible>();
+			Collectible collectible = null;
 
-			if(collectible.IsBeingCarried || collectible == currItem)
+			switch(collider.tag)
+			{
+				case "GoalObj":
+					collectible = collider.GetComponent<GoalObject>();
+				break;
+				case "Projectile":
+					collectible = collider.GetComponent<Projectile>();
+				break;
+				case "Consumable":
+					collectible = collider.GetComponent<Consumable>();
+				break;
+			}
+
+			if(collectible==null || collectible.IsBeingCarried || collectible.isBeingThrown || collectible == currItem)
 				return;
 
 			if(currItem != null)
