@@ -8,7 +8,7 @@ public class PlayerObject : MonoBehaviour {
 	public float stunTimeout = 2f;
 	public Transform MountPos;
 	public SlapObject slapObj;
-	public SlapObject fartShield;
+	public SlapObject fartObj;
 	public string playerName = string.Empty;
 
 	private MoveObj mover;
@@ -74,8 +74,6 @@ public class PlayerObject : MonoBehaviour {
 				currItem = null;
 			}
 		}
-		//if(fartShield != null)
-		//	fartShield.DoSlap();
 	}
 
 	void HandleMirror()

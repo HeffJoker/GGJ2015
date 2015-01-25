@@ -9,6 +9,7 @@ public class Projectile : Collectible {
 	public projectileType objType = projectileType.Plunger;
 	public float speed = 30f;
 	public float pushback = 60f;
+	public float effectStrength = 1f;
 
 	// Use this for initialization
 	void Start () {
@@ -61,10 +62,14 @@ public class Projectile : Collectible {
 			{
 				case projectileType.Laxative:
 					//Increase poop timer
+					PoopBar poobar = affectedObj.GetComponent<PoopContoller>().poopBar;
+					poobar.Increment(effectStrength);					
 				break;
 
 				case projectileType.Plunger:
 					//Slow hit player
+					affectedObj.GetComponent<MoveObj>().moveMode = MoveObj.Mode.Wiggle;
+					affectedObj.GetComponent<MoveObj>().speed = 4;
 				break;
 			}
 		}
