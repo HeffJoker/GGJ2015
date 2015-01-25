@@ -115,8 +115,6 @@ public class StallSpawner : MonoBehaviour {
 
 
 		playerObj.DisableControl();
-		playerObj.transform.position = transform.position;
-
 		playerObj.DisableCollision();
 
 		if(playerObj.CurrItem != null)
