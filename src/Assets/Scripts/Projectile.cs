@@ -43,7 +43,7 @@ public class Projectile : Collectible {
 		if( !isThrown || collider.gameObject == throwingPlayer)
 			return;
 
-		if(collider.CompareTag("Player") || collider.CompareTag("Finish"))
+		if(collider.CompareTag("Player"))
 		{
 			Debug.Log("projectile '" + gameObject.name + "' hit '" + collider.gameObject.name + "'");
 			doEffect(collider.gameObject);
