@@ -16,8 +16,13 @@ public class StallSpawner : MonoBehaviour {
 
 	private PlayerObject playerObj;
 
+	public PlayerObject PlayerObj
+	{
+		get { return playerObj; }
+	}
+
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 
 		if(ignorePlayerSelection)
 		{

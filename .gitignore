@@ -18,3 +18,4 @@ sysinfo.txt
 /src/*.sln
 /src/*.userprefs
 /src/*.csproj
+/release

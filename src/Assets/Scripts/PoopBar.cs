@@ -7,16 +7,16 @@ public class PoopBar : MonoBehaviour {
 	private float maxWidth;
 	private float curWidth=0;
 	private PoopContoller pc;
-	private GameObject player;
 
 	public float maxPoop=100;
 	public float curPoop=50;
-	public string playerName;
+	public StallSpawner stall;
+
 	// Use this for initialization
 	void Start () {
 		bar = GetComponent<RectTransform> ();
-		player = GameObject.Find (playerName);
-		pc = player.GetComponent<PoopContoller> ();
+
+		pc = stall.PlayerObj.GetComponent<PoopContoller>();
 		maxWidth = bar.rect.width;
 	}
 	
