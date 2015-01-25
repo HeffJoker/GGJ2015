@@ -18,7 +18,13 @@ public class PlayerObject : MonoBehaviour {
 	public bool HasGoalObj
 	{
 		get { return currItem != null; }
-}
+	}
+
+	public InputDevice InDevice
+	{
+		get;
+		set;
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -50,8 +56,12 @@ public class PlayerObject : MonoBehaviour {
 			}
 		}
 
+<<<<<<< HEAD
 		//if(fartShield != null)
 		//	fartShield.DoSlap();
+=======
+		fartShield.DoSlap();
+>>>>>>> origin/master
 	}
 
 	void HandleMirror()
