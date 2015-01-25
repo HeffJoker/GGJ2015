@@ -14,8 +14,14 @@ public class MainMenu : MonoBehaviour {
 	}
 	public void StartGame()
 	{
-		Application.LoadLevel ("main_scene");
+		Application.LoadLevel ("character_select_scene");
 	}
+
+	public void ShowCredits()
+	{
+		Application.LoadLevel("credits_scene");
+	}
+
 	public void ExitGame()
 	{
 		Application.Quit ();
