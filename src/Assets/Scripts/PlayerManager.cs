@@ -6,10 +6,17 @@ public class PlayerManager : MonoBehaviour {
 
 	public PlayerObject playerPrefab;
 	public CharacterSelector[] selectors;
+	public float TransitionTime = 5f;
 	
 	private List<InputDevice> devices = new List<InputDevice>();
 	private List<PlayerObject> players = new List<PlayerObject>();
+	private bool isTransitioning = false;
 
+
+	public List<PlayerObject> Players
+	{
+		get { return players; }
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -33,14 +40,16 @@ public class PlayerManager : MonoBehaviour {
 				int index = devices.Count;
 				devices.Add(currDevice);
 				selectors[index].DoEnable(currDevice, this, index);
-				CreatePlayer();
+				CreatePlayer(currDevice);
 			}
 		}	
 	}
 
-	public void CreatePlayer()
+	public void CreatePlayer(InputDevice inDevice)
 	{
 		PlayerObject newPlayer = Instantiate(playerPrefab) as PlayerObject;
+		newPlayer.transform.parent = transform;
+		newPlayer.InDevice = inDevice;
 		newPlayer.gameObject.SetActive(false);
 		players.Add(newPlayer);
 	}
@@ -62,5 +71,25 @@ public class PlayerManager : MonoBehaviour {
 		}
 
 		return false;
+	}
+
+	public void StartCountDown()
+	{	
+		if(!isTransitioning && players.Count >= 2)
+		{
+			Invoke("MoveToMainScene", TransitionTime);
+			isTransitioning = true;
+		}
+	}
+
+	public void StopCountDown()
+	{
+		CancelInvoke("MoveToMainScene");
+		isTransitioning = false;
+	}
+
+	private void MoveToMainScene()
+	{
+		Application.LoadLevel("main_scene");
 	}
 }

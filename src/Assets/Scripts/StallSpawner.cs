@@ -7,13 +7,29 @@ public class StallSpawner : MonoBehaviour {
 	public float spawnTimeout = 1f;
 	public float spawnForce = 1000f;
 	public Vector2 spawnDir = Vector2.zero;
-	public PlayerObject playerObj;
+	public int PlayerIndex = 0;
 	public WinMenu winMenu;
 	public PauseMenu pauseMenu;
 
+	private PlayerObject playerObj;
+
 	// Use this for initialization
 	void Start () {
-		StartSpawn();
+		PlayerManager manager = GameObject.FindObjectOfType<PlayerManager>();
+
+		if(manager == null)
+			Debug.LogError("Could not find PlayerManager object!!");
+		else
+		{
+			if(PlayerIndex < manager.Players.Count && PlayerIndex >= 0)
+			{
+				playerObj = manager.Players[PlayerIndex];
+				playerObj.gameObject.SetActive(true);
+				StartSpawn();
+			}
+			else
+				Debug.LogError(string.Format("Could not find a player for index = {0}", PlayerIndex));
+		}
 	}
 
 	public void StartSpawn()

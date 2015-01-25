@@ -30,6 +30,9 @@ public class CharacterSelector : MonoBehaviour {
 		this.playerIndex = playerIndex;
 		this.manager = manager;
 		InputDev = device;
+
+		if(manager != null)
+			manager.StopCountDown();
 	}
 
 	void Start()
@@ -77,7 +80,10 @@ public class CharacterSelector : MonoBehaviour {
 	void DoSelect(bool done)
 	{
 		if(manager != null)
+		{
 			manager.SetPlayerTexture(textures[texIndex], playerIndex);	
+			manager.StartCountDown();
+		}
 
 		List<Image> imgList = new List<Image>();
 		imgList.AddRange(GetComponents<Image>());
@@ -90,7 +96,10 @@ public class CharacterSelector : MonoBehaviour {
 	void DoDeselect()
 	{
 		if(manager != null)
+		{
 			manager.SetPlayerTexture(null, playerIndex);
+			manager.StopCountDown();
+		}
 
 		List<Image> imgList = new List<Image>();
 		imgList.AddRange(GetComponents<Image>());

@@ -29,6 +29,12 @@ public class MoveObj : MonoBehaviour {
 		get { return dir; }
 	}
 
+	public InputDevice InDevice
+	{
+		get;
+		set;
+	}
+
 	// Use this for initialization
 	void Start () {
 		thisObject = this.gameObject;				//Reference the current object
@@ -46,7 +52,7 @@ public class MoveObj : MonoBehaviour {
 		if(controlIndex < 0 || controlIndex >= InputManager.Devices.Count)
 			return;
 
-		InputDevice input = InputManager.Devices[controlIndex];
+		InputDevice input = InDevice; //InputManager.Devices[controlIndex];
 
 		MovementHandler (input.LeftStickX, input.LeftStickY); //LeftStickX, input.LeftStickY);
 	}

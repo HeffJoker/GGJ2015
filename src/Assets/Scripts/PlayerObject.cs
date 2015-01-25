@@ -14,6 +14,7 @@ public class PlayerObject : MonoBehaviour {
 	private MoveObj mover;
 	private Collectible currItem;
 	private bool canGrabItem = true;
+	private InputDevice inDevice;
 
 	public bool HasGoalObj
 	{
@@ -22,13 +23,18 @@ public class PlayerObject : MonoBehaviour {
 
 	public InputDevice InDevice
 	{
-		get;
-		set;
+		get { return inDevice; }
+		set 
+		{
+			inDevice = value;
+			mover.InDevice = value;
+		}
 	}
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		mover = GetComponent<MoveObj>();
+		mover.InDevice = InDevice;
 	}
 	
 	// Update is called once per frame
@@ -40,10 +46,10 @@ public class PlayerObject : MonoBehaviour {
 
 	void HandleSlap()
 	{
-		if(mover.controlIndex < 0 || mover.controlIndex >= InputManager.Devices.Count)
-			return;
+		//if(mover.controlIndex < 0 || mover.controlIndex >= InputManager.Devices.Count)
+		//	return;
 
-		InputDevice input = InputManager.Devices[mover.controlIndex];
+		InputDevice input = InDevice; //InputManager.Devices[mover.controlIndex];
 
 		if(input.AnyButton.WasPressed)
 		{
