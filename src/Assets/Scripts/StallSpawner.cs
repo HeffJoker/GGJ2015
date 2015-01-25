@@ -16,7 +16,7 @@ public class StallSpawner : MonoBehaviour {
 	public PoopBar gruntBar;
 	public PlayerObject debugPlayerObj;
 	public bool ignorePlayerSelection = false;
-
+	public GameObject startPos = null;
 
 	private bool playerInStall = false;
 	private bool playerSpawned = false;
@@ -107,8 +107,16 @@ public class StallSpawner : MonoBehaviour {
 
 		pController = playerObj.GetComponent<PoopContoller>();
 		pController.poopBar = poopBar;
+
+		if(startPos != null)
+			playerObj.transform.position = startPos.transform.position;
+		else
+			Debug.LogError("No start pos set for " + playerObj.name );
+
+
 		playerObj.DisableControl();
 		playerObj.transform.position = transform.position;
+
 		playerObj.DisableCollision();
 
 		if(playerObj.CurrItem != null)
