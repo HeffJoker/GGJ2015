@@ -87,8 +87,15 @@ public class StallSpawner : MonoBehaviour {
 
 		pController = playerObj.GetComponent<PoopContoller>();
 		pController.poopBar = poopBar;
+		playerObj.DisableControl();
 		playerObj.transform.position = transform.position;
 		playerObj.DisableCollision();
+
+		if(playerObj.CurrItem != null)
+		{
+			Destroy(playerObj.CurrItem.gameObject);
+		}
+
 		Invoke("FinishSpawn", spawnTimeout);
 	}
 
