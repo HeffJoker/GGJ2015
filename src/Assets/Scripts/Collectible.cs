@@ -5,7 +5,7 @@ public class Collectible : MonoBehaviour {
 	
 	public float carryTimeout = 2f;
 	
-	private PlayerObject lastPlayer = null;
+	private PlayerObject attachedPlayer = null;
 	private bool isCarried = false;
 	
 	public bool IsBeingCarried 
@@ -15,10 +15,10 @@ public class Collectible : MonoBehaviour {
 	
 	public bool Attach(PlayerObject player)
 	{
-		if(lastPlayer == player)
+		if(attachedPlayer == player)
 			return false;
 		
-		lastPlayer = player;
+		attachedPlayer = player;
 		if(player.MountPos == null)
 		{
 			transform.position = transform.position;
@@ -31,16 +31,27 @@ public class Collectible : MonoBehaviour {
 		}
 		
 		isCarried = true;
+		GetComponent<CircleCollider2D>().enabled = false;
 		return true;
 	}
 	
 	public void Detach()
 	{
-		Transform oldObj = transform.parent.parent;
-		transform.parent = transform.parent.parent.parent; 
-		rigidbody2D.AddForce((oldObj.position - transform.position).normalized * 50f);
+		//Transform oldObj = transform.parent.parent;
+		transform.parent = getTopmostTransform(transform); // transform.parent.parent.parent; 
+		transform.position = new Vector3(transform.position.x + 0.5f, transform.position.y + 0.5f);
+		//rigidbody2D.AddForce(transform.position.normalized * 50f);
 		isCarried = false;
+		GetComponent<CircleCollider2D>().enabled = true;
 		Invoke("DetachFromPlayer", carryTimeout);
+	}
+
+	Transform getTopmostTransform(Transform trans)
+	{
+		if(trans.parent != null)
+			return getTopmostTransform(trans.parent);
+		else
+			return trans.parent;
 	}
 
 	public virtual void DoAction()
@@ -48,6 +59,6 @@ public class Collectible : MonoBehaviour {
 
 	void DetachFromPlayer()
 	{
-		lastPlayer = null;
+		attachedPlayer = null;
 	}
 }
