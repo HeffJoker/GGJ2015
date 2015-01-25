@@ -55,13 +55,8 @@ public class PlayerObject : MonoBehaviour {
 				currItem = null;
 			}
 		}
-
-<<<<<<< HEAD
 		//if(fartShield != null)
 		//	fartShield.DoSlap();
-=======
-		fartShield.DoSlap();
->>>>>>> origin/master
 	}
 
 	void HandleMirror()
