@@ -41,7 +41,7 @@ public class Collectible : MonoBehaviour {
 		}
 		
 		isCarried = true;
-		GetComponent<CircleCollider2D>().enabled = false;
+		GetComponent<Collider2D>().enabled = false;
 
 		if(rigidbody2D != null)
 			rigidbody2D.isKinematic = true;
@@ -54,7 +54,7 @@ public class Collectible : MonoBehaviour {
 		//Transform oldObj = transform.parent.parent;
 		transform.parent = getTopmostTransform(transform); // transform.parent.parent.parent; 
 		isCarried = false;
-		GetComponent<CircleCollider2D>().enabled = true;
+		GetComponent<Collider2D>().enabled = true;
 		Invoke("DetachFromPlayer", carryTimeout);
 	}
 

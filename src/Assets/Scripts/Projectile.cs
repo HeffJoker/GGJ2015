@@ -60,9 +60,11 @@ public class Projectile : Collectible {
 			switch(objType)
 			{
 				case projectileType.Laxative:
+					//Increase poop timer
 				break;
 
 				case projectileType.Plunger:
+					//Slow hit player
 				break;
 			}
 		}
