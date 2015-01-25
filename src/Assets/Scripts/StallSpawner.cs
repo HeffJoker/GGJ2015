@@ -7,14 +7,20 @@ public class StallSpawner : MonoBehaviour {
 	public float controlTimeout = 2f;
 	public float spawnTimeout = 1f;
 	public float spawnForce = 1000f;
+	public float gruntIncrement = 10f;
 	public Vector2 spawnDir = Vector2.zero;
 	public int playerIndex = 0;
 	public WinMenu winMenu;
 	public PauseMenu pauseMenu;
+	public PoopBar poopBar;
+	public PoopBar gruntBar;
 	public PlayerObject debugPlayerObj;
 	public bool ignorePlayerSelection = false;
 
+
+	private bool playerInStall = false;
 	private PlayerObject playerObj;
+	private PoopContoller pController;
 
 	public PlayerObject PlayerObj
 	{
@@ -23,7 +29,7 @@ public class StallSpawner : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
-
+		Time.timeScale = 1;
 		if(ignorePlayerSelection)
 		{
 			playerObj = debugPlayerObj;
@@ -58,8 +64,29 @@ public class StallSpawner : MonoBehaviour {
 		}
 	}
 
+	public void Update()
+	{
+		if(playerInStall)
+		{
+			InputDevice inDevice = playerObj.InDevice;
+
+			if(inDevice.AnyButton.WasPressed)
+				gruntBar.Increment(gruntIncrement);
+		}
+
+		if(gruntBar.ReachedMax)
+		{
+			winMenu.Show(playerObj.name);
+			pauseMenu.enabled = false;
+		}
+	}
+
 	public void StartSpawn()
 	{
+		gruntBar.transform.parent.gameObject.SetActive(false);
+
+		pController = playerObj.GetComponent<PoopContoller>();
+		pController.poopBar = poopBar;
 		playerObj.transform.position = transform.position;
 		playerObj.DisableCollision();
 		Invoke("FinishSpawn", spawnTimeout);
@@ -67,6 +94,7 @@ public class StallSpawner : MonoBehaviour {
 
 	private void FinishSpawn()
 	{
+		pController.StartPooping();
 		playerObj.rigidbody2D.velocity = Vector2.zero;
 		playerObj.rigidbody2D.AddForce(spawnDir * spawnForce);
 		playerObj.Invoke("EnableControl", controlTimeout);
@@ -79,8 +107,28 @@ public class StallSpawner : MonoBehaviour {
 		{
 			if(collider.gameObject == playerObj.gameObject && playerObj.HasGoalObj)
 			{
-				winMenu.Show(playerObj.name);
-				pauseMenu.enabled = false;
+				playerInStall = true;
+				playerObj.InStall = true;
+				gruntBar.transform.parent.gameObject.SetActive(true);
+
+				pController.StopPooping();
+				pController.poopBar.gameObject.SetActive(false);
+			}
+		}
+	}
+
+	void OnTriggerExit2D(Collider2D collider)
+	{
+		if(collider.CompareTag("Player"))
+		{
+			if(collider.gameObject == playerObj.gameObject && playerObj.HasGoalObj)
+			{
+				playerInStall = false;
+				playerObj.InStall = false;
+				gruntBar.transform.parent.gameObject.SetActive(false);
+				
+				pController.StartPooping();
+				pController.poopBar.gameObject.SetActive(true);
 			}
 		}
 	}

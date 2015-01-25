@@ -14,7 +14,14 @@ public class PlayerObject : MonoBehaviour {
 	private MoveObj mover;
 	private Collectible currItem;
 	private bool canGrabItem = true;
+	private bool inStall = false;
 	private InputDevice inDevice;
+
+	public bool InStall
+	{
+		get { return inStall; }
+		set { inStall = value; }
+	}
 
 	public bool HasGoalObj
 	{
@@ -57,7 +64,7 @@ public class PlayerObject : MonoBehaviour {
 
 		InputDevice input = InDevice; //InputManager.Devices[mover.controlIndex];
 
-		if(input.AnyButton.WasPressed)
+		if(input.AnyButton.WasPressed && !inStall)
 		{
 			if(currItem == null)
 				slapObj.DoSlap();
