@@ -32,6 +32,9 @@ public class StallSpawner : MonoBehaviour {
 		}
 		else
 		{
+			if(debugPlayerObj != null)
+				debugPlayerObj.gameObject.SetActive(false);
+
 			PlayerManager manager = GameObject.FindObjectOfType<PlayerManager>();
 
 			if(manager == null)

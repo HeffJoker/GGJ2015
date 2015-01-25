@@ -38,7 +38,7 @@ public class PlayerObject : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 
 		HandleSlap();
 		HandleMirror();
