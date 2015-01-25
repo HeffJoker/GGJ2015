@@ -34,6 +34,11 @@ public class PlayerObject : MonoBehaviour {
 		}
 	}
 
+	public Collectible CurrItem
+	{
+		get { return currItem; }
+	}
+
 	public InputDevice InDevice
 	{
 		get { return inDevice; }
