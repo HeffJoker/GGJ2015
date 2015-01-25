@@ -87,17 +87,16 @@ public class StallSpawner : MonoBehaviour {
 
 		pController = playerObj.GetComponent<PoopContoller>();
 		pController.poopBar = poopBar;
-<<<<<<< HEAD
 
 		if(startPos != null)
 			playerObj.transform.position = startPos.transform.position;
 		else
 			Debug.LogError("No start pos set for " + playerObj.name );
 
-=======
+
 		playerObj.DisableControl();
 		playerObj.transform.position = transform.position;
->>>>>>> origin/master
+
 		playerObj.DisableCollision();
 
 		if(playerObj.CurrItem != null)
