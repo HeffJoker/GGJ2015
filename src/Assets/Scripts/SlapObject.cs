@@ -16,16 +16,19 @@ public class SlapObject : MonoBehaviour {
 
 		isSlapping = true;
 		collider2D.enabled = true; 
-		sprite.enabled = true;
-
+		if(sprite!=null)
+			sprite.enabled = true;
+	
 		Invoke("DoDisable", disableTime);
 	}
 
 	void DoDisable()
 	{
 		collider2D.enabled = false;
-		sprite.enabled = false;
 		isSlapping = false;
+		if(sprite!=null)
+			sprite.enabled = false;
+
 	}
 
 	void Start()

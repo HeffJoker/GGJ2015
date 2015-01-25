@@ -8,6 +8,7 @@ public class PlayerObject : MonoBehaviour {
 	public float stunTimeout = 2f;
 	public Transform MountPos;
 	public SlapObject slapObj;
+	public SlapObject fartShield;
 	public string playerName = string.Empty;
 
 	private MoveObj mover;
@@ -16,7 +17,7 @@ public class PlayerObject : MonoBehaviour {
 	public bool HasGoalObj
 	{
 		get { return currItem != null; }
-	}
+}
 
 	// Use this for initialization
 	void Start () {
@@ -46,6 +47,8 @@ public class PlayerObject : MonoBehaviour {
 				currItem.Detach();
 				currItem = null;
 			}
+		}
+			fartShield.DoSlap();
 		}
 	}
 
