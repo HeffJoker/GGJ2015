@@ -34,7 +34,11 @@ public class Consumable : Collectible {
 			case (itemTypes.Burrito):
 				//Big fart effect
 				if(attachedPlayer.fartObj!=null)
+				{
+					attachedPlayer.rigidbody2D.mass *= 10;
 					attachedPlayer.fartObj.DoSlap();
+					StartCoroutine(restoreMass(attachedPlayer.gameObject));
+				}
 			break;
 
 			case (itemTypes.Pepto):
@@ -48,5 +52,11 @@ public class Consumable : Collectible {
 
 			break;
 		}
+	}
+
+	IEnumerator restoreMass(GameObject player)
+	{
+		yield return new WaitForSeconds(0.2f);
+		player.gameObject.rigidbody2D.mass /= 10;
 	}
 }
